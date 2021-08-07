@@ -95,8 +95,8 @@ public class ClientRenderer
     {
         screenW = Camera.main.scaledPixelWidth / pixelSizeX;
         screenH = Camera.main.scaledPixelHeight / pixelSizeY;
-        meshAmount = screenW * screenH + unitMeshes;
 
+        meshAmount = screenW * screenH + unitMeshes;
 
         properties = new MeshProperties[meshAmount];
 
@@ -110,13 +110,9 @@ public class ClientRenderer
         argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
         argsBuffer.SetData(args);
 
-
-
         offset = new Vector3(-(screenW / 2), -(screenH / 2));
 
         meshPropertiesBuffer = new ComputeBuffer(meshAmount, MeshProperties.Size());
-
-
     }
     public void UpdateBuffer() // ÄNDRA VARFÖR FIXEDUPDATE FUCKAR MED SCANLINES
     {
