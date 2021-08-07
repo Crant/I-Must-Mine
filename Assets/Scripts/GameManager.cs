@@ -21,18 +21,22 @@ public class GameManager : NetworkBehaviour
     {
         //GET SEED
         gridGen = new GridGenerator();
-        tileController = new TileController();
-        unitController = new UnitController();
-        renderer = new ClientRenderer(material);
-        UnitController.activeUnits.Add(new BaseUnit(new Vector2(50, 50), new Vector2(2, 3), 1f, 1f, 1f));
+
         //Generate World FROM SEED
 
         if (loadedSave)
         {
-            World.CreateWorld(serializeWidth, serializeHeight, gridGen.GenerateWorld(serializeWidth, serializeHeight));
+            World.CreateWorld(serializeWidth, serializeHeight, gridGen.GenerateWorld(serializeWidth, serializeHeight)); // FUCKING STARTA ALLT EFTER VÄRLDEN ÄR LOADAD RETARD
         }
         else
             World.CreateWorld(serializeWidth, serializeHeight, gridGen.GenerateWorld(serializeWidth, serializeHeight));
+
+        tileController = new TileController();
+        unitController = new UnitController();
+
+        UnitController.activeUnits.Add(new BaseUnit(new Vector2(50, 50), new Vector2(1, 1), 0.7f, .1f, 1f));
+
+        renderer = new ClientRenderer(material);
     }
     private void Update()
     {
