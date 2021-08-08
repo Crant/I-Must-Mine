@@ -17,8 +17,8 @@ public class ClientRenderer
     }
 
     private int meshAmount;
-    //private List<BaseUnit> visibleUnits;
-    //private List<BaseUnit> unitsOnScreen;
+    private List<BaseUnit> visibleUnits;
+    private List<BaseUnit> unitsOnScreen;
     //private PlayerUnit player;
 
     private const int pixelSizeX = 16;
@@ -60,7 +60,7 @@ public class ClientRenderer
         
         CreateMesh();
         InitBuffer();
-        worldBounds = new Bounds(Vector3.zero, new Vector3(World.GetWidth() * 10, World.GetHeight() * 10));
+        worldBounds = new Bounds(Vector3.zero, new Vector3(World.GetWidth() * 2, World.GetHeight() * 2));
     }
     private void CreateMesh()
     {
@@ -95,8 +95,8 @@ public class ClientRenderer
     {
         screenW = Camera.main.scaledPixelWidth / pixelSizeX;
         screenH = Camera.main.scaledPixelHeight / pixelSizeY;
-        meshAmount = screenW * screenH + unitMeshes;
 
+        meshAmount = screenW * screenH + unitMeshes;
 
         properties = new MeshProperties[meshAmount];
 
@@ -110,19 +110,15 @@ public class ClientRenderer
         argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
         argsBuffer.SetData(args);
 
-
-
         offset = new Vector3(-(screenW / 2), -(screenH / 2));
 
         meshPropertiesBuffer = new ComputeBuffer(meshAmount, MeshProperties.Size());
-
-
     }
     public void UpdateBuffer() // ÄNDRA VARFÖR FIXEDUPDATE FUCKAR MED SCANLINES
     {
         //unitsOnScreen.Clear();
         //visibleUnits.Clear();
-        //visibleUnits.AddRange(Mapgenerator.activeUnits.Keys);
+        
         //for (int i = 0; i < visibleUnits.Count; i++)
         //{
         //    if (Mapgenerator.activeUnits[visibleUnits[i]].x >= player.GetPosition().x + offset.x &&
@@ -135,14 +131,16 @@ public class ClientRenderer
 
         //    }
         //}
-        meshAmount = (screenW * screenH) + unitMeshes;
+        meshAmount = (screenW * screenH) + 1;
+
+        MeshProperties props;
 
         int propertiesIndex = 0;
         for (int x = -screenW / 2; x < screenW / 2; x++)
         {
             for (int y = -screenH / 2; y < screenH / 2; y++)
             {
-                MeshProperties props = new MeshProperties();
+                props = new MeshProperties();
                 
                 Vector2 pos = Vector2Int.FloorToInt(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y) + new Vector2(x, y));
                 props.mat = Matrix4x4.Translate(pos);
@@ -179,6 +177,13 @@ public class ClientRenderer
         //        }
         //    }
         //}
+        props = new MeshProperties();
+
+        props.mat = Matrix4x4.Translate(UnitController.activeUnits[0].GetPosition());
+        props.color = Color.red;
+        properties[propertiesIndex] = props;
+        propertiesIndex++;
+
         meshPropertiesBuffer.SetData(properties);
         material.SetBuffer("_Properties", meshPropertiesBuffer);
         Graphics.DrawMeshInstancedIndirect(mesh, 0, material, worldBounds, argsBuffer);

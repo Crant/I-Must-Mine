@@ -7,5 +7,4 @@ public class Tile : ScriptableObject
 {
     public float hitPoints;
     public float miningStr;
-    
 }

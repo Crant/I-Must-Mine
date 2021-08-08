@@ -26,13 +26,13 @@ public class BaseUnit
     protected float velocityX;
     protected float velocityY;
 
-    protected float maxVelocity = 1f;
+    protected float maxVelocity = 0.5f;
     protected float drag = 1f;
-    protected float accel = 0.5f;
+    protected float accel = 0.1f;
 
-    protected float mass = 1f;
+    protected float mass = 5f;
 
-    protected bool isGrounded;
+    public bool isGrounded;
 
     public virtual void HandleMovement()
     {
@@ -84,7 +84,6 @@ public class BaseUnit
     {
         //velocityX += direction.x * (Time.deltaTime + accel);
         //velocityY += direction.y * (Time.deltaTime + accel);
-        Debug.Log(direction);
 
         velocityX = isGrounded ? Mathf.Clamp(velocityX + direction.x, -maxVelocity, maxVelocity) : Mathf.Clamp(velocityX + direction.x, -drag, drag);
         velocityY = Mathf.Clamp(velocityY + direction.y, -maxVelocity, maxVelocity);
