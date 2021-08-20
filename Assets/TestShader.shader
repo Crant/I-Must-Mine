@@ -1,5 +1,8 @@
 Shader "Custom/TestShader"
 {
+        Properties {
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
+    }
   SubShader {
         Tags { "RenderType" = "Opaque" }
 

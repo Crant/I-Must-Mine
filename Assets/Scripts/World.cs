@@ -6,14 +6,14 @@ using Unity.Collections;
 public static class World
 {
     private static bool worldCreated = false;
-    private static NativeArray<int> world;
+    private static NativeArray<TileType> world;
     private static Dictionary<int, TileData> activeTiles;
     private static int worldWidth;
     private static int worldHeight;
 
     public const float gravity = 0.7f;
 
-    public static void CreateWorld(int width, int height, NativeArray<int> newWorld)
+    public static void CreateWorld(int width, int height, NativeArray<TileType> newWorld)
     {
         if (!worldCreated)
         {
@@ -28,13 +28,25 @@ public static class World
     {
         worldCreated = false;
     }
-    public static void SetTile(int index, int value)
+    public static void SetTile(int index, TileType value)
     {
         world[index] = value;
     }
-    public static int GetTile(int index)
+    public static void SetTile(Vector2 pos, TileType value)
+    {
+        world[Index(pos)] = value;
+    }
+    public static TileType GetTile(int index)
     {
         return world[index];
+    }
+    public static TileType GetTile(int x, int y)
+    {
+        return world[Index(x, y)];
+    }
+    public static TileType GetTile(Vector2 pos)
+    {
+        return world[Index(pos)];
     }
     public static int GetWidth()
     {
@@ -75,15 +87,15 @@ public static class World
     }
     public static bool IsBlock(Vector2 pos)
     {
-        return world[Index(pos)] >= 1;
+        return (int)world[Index(pos)] >= 1;
     }
     public static bool IsBlock(Vector3 pos)
     {
-        return world[Index(pos)] >= 1;
+        return (int)world[Index(pos)] >= 1;
     }
     public static bool IsBlock(float x, float y)
     {
-        return world[Index(x, y)] >= 1;
+        return (int)world[Index(x, y)] >= 1;
     }
     public static IEnumerable<int> GetActiveKeys()
     {

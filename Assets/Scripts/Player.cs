@@ -29,4 +29,8 @@ public class Player : NetworkBehaviour
         }
         unit.HandleMovement();
     }
+    private void Update()
+    {
+
+    }
 }

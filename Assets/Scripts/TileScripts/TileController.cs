@@ -30,4 +30,56 @@ public class TileController
         }
         keys.Clear();
     }
+    public void UpdateCells()
+    {
+        for (int x = 0; x < World.GetWidth(); x++)
+        {
+            for (int y = 0; y < World.GetHeight(); y++)
+            {
+                if (World.GetTile(World.Index(x, y)) == TileType.Dirt && y > 0 && y < World.GetHeight() && x > 0 && x < World.GetWidth() - 1)
+                {
+                    if (World.GetTile(World.Index(x, y - 1)) == 0)
+                    {
+                        World.SetTile(World.Index(x, y), 0);
+                        World.SetTile(World.Index(x, y - 1), TileType.Dirt);
+                        
+                    }
+                    else if (World.GetTile(World.Index(x + 1, y - 1)) == 0)
+                    {
+                        World.SetTile(World.Index(x, y), 0);
+                        World.SetTile(World.Index(x + 1, y - 1), TileType.Dirt);
+                    }
+                    else if (World.GetTile(World.Index(x - 1, y - 1)) == 0)
+                    {
+                        World.SetTile(World.Index(x, y), 0);
+                        World.SetTile(World.Index(x - 1, y - 1), TileType.Dirt);
+                    }
+                }
+
+            }
+
+        }
+    }
+    public void MineBlock(Vector2 pos, float miningSpeed)
+    {
+        if (!World.IsBlock(pos))
+            return;
+
+        if (!World.GetActiveTiles().ContainsKey(World.Index(pos)))
+        {
+            World.ActivateTileData(World.Index(pos), Tiles.Dirt());
+        }
+        World.GetActiveTiles().TryGetValue(World.Index(pos), out TileData tile);
+
+        tile.miningHp -= miningSpeed;
+
+        World.GetActiveTiles()[World.Index(pos)] = tile;
+    }
+    public void CreateBlock(Vector2 pos, TileType tile)
+    {
+        if (!World.IsBlock(pos))
+        {
+            World.SetTile(pos, tile);
+        }
+    }
 }

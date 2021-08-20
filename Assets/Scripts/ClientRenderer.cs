@@ -1,9 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Unity.Collections;
 public class ClientRenderer
 {
+    public ClientRenderer(Material material, Material tileMat)
+    {
+        this.material = material;
+        memerial = tileMat;
+        Setup();
+
+    }
+
     private struct MeshProperties
     {
         public Matrix4x4 mat;
@@ -36,14 +44,10 @@ public class ClientRenderer
     private MeshProperties[] properties;
 
     private Material material;
+    private Material memerial;
 
     private Mesh mesh;
-    public ClientRenderer(Material material)
-    {
-        this.material = material;
-        Setup();
 
-    }
     //private void Start()
     //{
     //    player = GetComponent<PlayerUnit>();
@@ -118,7 +122,7 @@ public class ClientRenderer
     {
         //unitsOnScreen.Clear();
         //visibleUnits.Clear();
-        
+
         //for (int i = 0; i < visibleUnits.Count; i++)
         //{
         //    if (Mapgenerator.activeUnits[visibleUnits[i]].x >= player.GetPosition().x + offset.x &&
@@ -141,7 +145,7 @@ public class ClientRenderer
             for (int y = -screenH / 2; y < screenH / 2; y++)
             {
                 props = new MeshProperties();
-                
+
                 Vector2 pos = Vector2Int.FloorToInt(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y) + new Vector2(x, y));
                 props.mat = Matrix4x4.Translate(pos);
                 if (World.IsBlock(pos))
@@ -187,5 +191,120 @@ public class ClientRenderer
         meshPropertiesBuffer.SetData(properties);
         material.SetBuffer("_Properties", meshPropertiesBuffer);
         Graphics.DrawMeshInstancedIndirect(mesh, 0, material, worldBounds, argsBuffer);
+        //Graphics.DrawMeshInstancedProcedural(mesh, 0, material, worldBounds, meshAmount);
     }
+    private void TestRender()
+    {
+
+    }
+
+    // NY SKIT HÄR UNDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    //int blockSize = 32;
+    //public Vector2 ConvertPixelsToUVCoordinates(int x, int y, int textureWidth, int textureHeight)
+    //{
+    //    return new Vector2((float)x / textureWidth, (float)y / textureHeight);
+    //}
+    //public void TestingInit()
+    //{
+    //    screenW = Camera.main.scaledPixelWidth / pixelSizeX;
+    //    screenH = Camera.main.scaledPixelHeight / pixelSizeY;
+
+    //    meshAmount = screenW * screenH;
+
+    //    properties = new MeshProperties[meshAmount];
+
+    //    uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
+
+    //    args[0] = (uint)mesh.GetIndexCount(0);
+    //    args[1] = (uint)meshAmount;
+    //    args[2] = (uint)mesh.GetIndexStart(0);
+    //    args[3] = (uint)mesh.GetBaseVertex(0);
+
+    //    argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
+    //    argsBuffer.SetData(args);
+
+    //    offset = new Vector3(-(screenW / 2), -(screenH / 2));
+
+    //    Debug.Log(meshAmount);
+    //    meshPropertiesBuffer = new ComputeBuffer(meshAmount, MeshProperties.Size());
+    //    coolMap = new NativeMultiHashMap<int, Matrix4x4>(10, Allocator.Persistent);
+
+    //}
+    //NativeMultiHashMap<int, Matrix4x4> coolMap;
+    //Matrix4x4[] retardArray;
+
+    //public void RenderScreen() // ÄNDRA VARFÖR FIXEDUPDATE FUCKAR MED SCANLINES
+    //{
+    //    coolMap.Clear();
+    //    for (int x = -screenW / 2; x < screenW / 2; x++)
+    //    {
+    //        for (int y = -screenH / 2; y < screenH / 2; y++)
+    //        {
+
+    //            Vector2 pos = Vector2Int.FloorToInt(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y) + new Vector2(x, y));
+    //            coolMap.Add(World.GetTile(pos), Matrix4x4.Translate(pos));
+    //        }
+    //    }
+
+
+    //    NativeKeyValueArrays<int, Matrix4x4> dude = coolMap.GetKeyValueArrays(Allocator.Temp);
+    //    int nigger = dude.Keys.Unique();
+
+
+    //    for (int i = 0; i < nigger; i++)
+    //    {
+    //        GraphicsBuffer bufer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, coolMap.CountValuesForKey(i), 1 * args.Length * sizeof(uint));
+    //        Graphics.DrawMeshInstancedIndirect(mesh, 0, material, worldBounds, bufer);
+
+    //    }
+    //    dude.Dispose();
+    //    //Debug.Log(dude.Keys + " keys length " + dude.Values.Length);
+    //    //Graphics.DrawMeshInstanced(mesh, 0 , material, dude.)
+    //    // Graphics.DrawMeshInstanced(mesh, 0 , memerial)
+    //}
+
+    ////int blockSize = 32;
+    ////public Vector2 ConvertPixelsToUVCoordinates(int x, int y, int textureWidth, int textureHeight)
+    ////{
+    ////    return new Vector2((float)x / textureWidth, (float)y / textureHeight);
+    ////}
+    //private ComputeBuffer positionBuffer;
+    //void UpdateBuffers()
+    //{
+    //    // Ensure submesh index is in range
+
+    //    // Positions
+    //    if (positionBuffer != null)
+    //        positionBuffer.Release();
+    //    positionBuffer = new ComputeBuffer(meshAmount, 16);
+    //    Vector4[] positions = new Vector4[meshAmount];
+    //    for (int i = 0; i < meshAmount; i++)
+    //    {
+    //        float angle = Random.Range(0.0f, Mathf.PI * 2.0f);
+    //        float distance = Random.Range(20.0f, 100.0f);
+    //        float height = Random.Range(-2.0f, 2.0f);
+    //        float size = Random.Range(0.05f, 0.25f);
+    //        positions[i] = new Vector4(Mathf.Sin(angle) * distance, height, Mathf.Cos(angle) * distance, size);
+    //    }
+    //    positionBuffer.SetData(positions);
+    //    instanceMaterial.SetBuffer("positionBuffer", positionBuffer);
+
+    //    // Indirect args
+    //    if (instanceMesh != null)
+    //    {
+    //        args[0] = (uint)instanceMesh.GetIndexCount(subMeshIndex);
+    //        args[1] = (uint)instanceCount;
+    //        args[2] = (uint)instanceMesh.GetIndexStart(subMeshIndex);
+    //        args[3] = (uint)instanceMesh.GetBaseVertex(subMeshIndex);
+    //    }
+    //    else
+    //    {
+    //        args[0] = args[1] = args[2] = args[3] = 0;
+    //    }
+    //    argsBuffer.SetData(args);
+
+    //    cachedInstanceCount = instanceCount;
+    //    cachedSubMeshIndex = subMeshIndex;
+    //}
 }

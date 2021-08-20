@@ -5,9 +5,9 @@ using Unity.Collections;
 public class GridGenerator
 {
     private const int randomFillPercent = 50;
-    public NativeArray<int> GenerateWorld(int width, int height)
+    public NativeArray<TileType> GenerateWorld(int width, int height)
     {
-        NativeArray<int> world = new NativeArray<int>(width * height, Allocator.Persistent);
+        NativeArray<TileType> world = new NativeArray<TileType>(width * height, Allocator.Persistent);
 
         world = RandomFillMap(world, Time.realtimeSinceStartup.ToString(), width, height);
 
@@ -16,7 +16,7 @@ public class GridGenerator
         return world;
 
     }
-    private NativeArray<int> RandomFillMap(NativeArray<int> world, string seed, int width, int height)
+    private NativeArray<TileType> RandomFillMap(NativeArray<TileType> world, string seed, int width, int height)
     {
         System.Random pseudoRandomGenerator = new System.Random(seed.GetHashCode());
 
@@ -24,7 +24,7 @@ public class GridGenerator
         {
             for (int y = 0; y < height; y++)
             {
-                world[x * height + y] = FillArea(x, y, pseudoRandomGenerator);
+                world[x * height + y] = (TileType)FillArea(x, y, pseudoRandomGenerator);
             }
         }
         return world;
@@ -37,7 +37,7 @@ public class GridGenerator
        return pseudoRandomGenerator.Next(0, 100) < randomFillPercent ? 1 : 0;
     }
 
-    private NativeArray<int> SmoothMap(NativeArray<int> world, int width, int height)
+    private NativeArray<TileType> SmoothMap(NativeArray<TileType> world, int width, int height)
     {
         for (int x = 0; x < width; x++)
         {
@@ -47,7 +47,7 @@ public class GridGenerator
 
                 if (neighbourWallTiles > 4)
                 {
-                    world[x * height + y] = 1;
+                    world[x * height + y] = TileType.Dirt;
                 }
 
                 else if (neighbourWallTiles < 4)
@@ -59,7 +59,7 @@ public class GridGenerator
         }
         return world;
     }
-    private int GetSurroundingWallCount(int gridX, int gridY, NativeArray<int> world, int width, int height)
+    private int GetSurroundingWallCount(int gridX, int gridY, NativeArray<TileType> world, int width, int height)
     {
         int wallCount = 0;
         for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
@@ -70,7 +70,7 @@ public class GridGenerator
                 {
                     if (neighbourX != gridX || neighbourY != gridY)
                     {
-                        wallCount += world[neighbourX * height + neighbourY];
+                        wallCount += (int)world[neighbourX * height + neighbourY];
                     }
                 }
 

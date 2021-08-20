@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5006702739780225652}
   - component: {fileID: 5006702739780225653}
   - component: {fileID: 5006702739780225658}
+  - component: {fileID: 1970645099077788784}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -47,7 +48,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 
+  m_AssetId: 2d16661a91b0166418dc35dec3211f8d
   hasSpawned: 0
 --- !u!114 &5006702739780225658
 MonoBehaviour:
@@ -64,6 +65,22 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   material: {fileID: 2100000, guid: 1ea06b0d56a4a6444b283813cc35c1f6, type: 2}
-  serializeWidth: 500
-  serializeHeight: 500
+  memerial: {fileID: 2100000, guid: c8cbffb235160e74080aa3dccddd8163, type: 2}
+  serializeWidth: 140
+  serializeHeight: 70
   seed: 
+--- !u!114 &1970645099077788784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5006702739780225659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f18bf7580143724fbc760cdeeb0cb7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializedTiles:
+  - {fileID: 11400000, guid: 9c96cf48ef16cf9409fd2ee7976268ae, type: 2}
+  - {fileID: 11400000, guid: 0c238878cd5a0844a8e3ca520139a400, type: 2}
