@@ -12,19 +12,32 @@ public class ClientRenderer
 
     }
 
+    //private struct MeshProperties
+    //{
+    //    public Matrix4x4 mat;
+    //    public Vector4 color;
+    //    public Vector2 uvs;
+
+    //    public static int Size()
+    //    {
+    //        return sizeof(float) * 4 * 4 + // matrix
+    //            sizeof(float) * 4 + sizeof(float) * 2;         // color und uvs
+    //    }
+    //}
     private struct MeshProperties
     {
         public Matrix4x4 mat;
-        public Vector4 color;
+        public Vector2 uvs;
 
         public static int Size()
         {
-            return sizeof(float) * 4 * 4 + // matrix
-                sizeof(float) * 4;         // color 
+            return sizeof(float) * 4 * 4  + sizeof(float) * 2;         // color und uvs
         }
     }
 
+
     private int meshAmount;
+    private Vector2[] uvs;
     private List<BaseUnit> visibleUnits;
     private List<BaseUnit> unitsOnScreen;
     //private PlayerUnit player;
@@ -80,14 +93,14 @@ public class ClientRenderer
         uv[0] = new Vector2(0, 1);
         uv[1] = new Vector2(1, 1);
         uv[2] = new Vector2(0, 0);
-        uv[3] = new Vector2(1, 1);
+        uv[3] = new Vector2(1, 0);
 
         triangles[0] = 0;
         triangles[1] = 1;
         triangles[2] = 2;
-        triangles[3] = 2;
-        triangles[4] = 1;
-        triangles[5] = 3;
+        triangles[3] = 1;
+        triangles[4] = 3;
+        triangles[5] = 2;
 
         mesh = new Mesh();
 
@@ -114,12 +127,15 @@ public class ClientRenderer
         argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
         argsBuffer.SetData(args);
 
+
+
         offset = new Vector3(-(screenW / 2), -(screenH / 2));
 
         meshPropertiesBuffer = new ComputeBuffer(meshAmount, MeshProperties.Size());
     }
     public void UpdateBuffer() // ÄNDRA VARFÖR FIXEDUPDATE FUCKAR MED SCANLINES
     {
+        MaterialPropertyBlock block = new MaterialPropertyBlock();
         //unitsOnScreen.Clear();
         //visibleUnits.Clear();
 
@@ -148,19 +164,34 @@ public class ClientRenderer
 
                 Vector2 pos = Vector2Int.FloorToInt(new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y) + new Vector2(x, y));
                 props.mat = Matrix4x4.Translate(pos);
+                
+
+
                 if (World.IsBlock(pos))
                 {
                     if (World.GetActiveTiles().TryGetValue(World.Index(pos), out TileData tile))
                     {
-                        props.color = Color.yellow;
+                        //props.color = Color.yellow;
+                        //props.uvs = new Vector2(Random.Range(0f, 0.1f), Random.Range(0f, 0.1f));
+                        props.uvs = new Vector2(0.032f * (int)TileType.Dirt, 0f);
+                        //props.uvs = new Vector2(0.02f * (int)TileType.Dirt, 0f);
                     }
                     else
                     {
-                        props.color = Color.black;
+                        //props.color = Color.black;
+                        //props.uvs = new Vector2(Random.Range(0.1f, 0.3f), Random.Range(0.1f, 0.3f));
+                         props.uvs = new Vector2(0.032f * (int)TileType.Stone, 0f);
+                        //props.uvs = new Vector2(0.02f * (int)TileType.Stone, 0f);
                     }
                 }
                 else
-                    props.color = Color.white;
+                {
+                    //props.color = Color.white;
+                    //props.uvs = new Vector2(Random.Range(0.5f, 0.7f), Random.Range(0.5f, 0.7f));
+                    props.uvs = new Vector2(0.032f * (int)TileType.Empty, 0f);
+                    //props.uvs = new Vector2(0.02f * (int)TileType.Empty, 0f);
+                }
+
 
                 properties[propertiesIndex] = props;
                 propertiesIndex++;
@@ -184,14 +215,14 @@ public class ClientRenderer
         props = new MeshProperties();
 
         props.mat = Matrix4x4.Translate(UnitController.activeUnits[0].GetPosition());
-        props.color = Color.red;
+        //props.color = Color.red;
         properties[propertiesIndex] = props;
         propertiesIndex++;
 
         meshPropertiesBuffer.SetData(properties);
         material.SetBuffer("_Properties", meshPropertiesBuffer);
-        Graphics.DrawMeshInstancedIndirect(mesh, 0, material, worldBounds, argsBuffer);
-        //Graphics.DrawMeshInstancedProcedural(mesh, 0, material, worldBounds, meshAmount);
+        //Graphics.DrawMeshInstancedIndirect(mesh, 0, material, worldBounds, argsBuffer);
+        Graphics.DrawMeshInstancedProcedural(mesh, 0, material, worldBounds, meshAmount);
     }
     private void TestRender()
     {

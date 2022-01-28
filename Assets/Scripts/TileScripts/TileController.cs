@@ -25,7 +25,7 @@ public class TileController
             else if (World.GetTileData(keys[i]).miningHp <= 0 || World.GetTileData(keys[i]).hitPoints <= 0)
             {
                 World.DeactivateTileData(keys[i]);
-                World.SetTile(keys[i], (int)TileType.Empty);
+                World.SetTile(keys[i], TileType.Empty);
             }
         }
         keys.Clear();

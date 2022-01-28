@@ -18,6 +18,7 @@ public class GameManager : NetworkBehaviour
     public TileController tileController; // SKA VARA PRIVATE ÄR PUBLIC FÖR ATT TESTA I PLAYER
     private UnitController unitController;
     private ClientRenderer renderer;
+    private Renderer testRender;
 
     public static GameManager main;
     private void Awake()
@@ -44,12 +45,16 @@ public class GameManager : NetworkBehaviour
         UnitController.activeUnits.Add(new BaseUnit(new Vector2(50, 50), new Vector2(1, 1), 0.7f, .1f, 1f));
 
         renderer = new ClientRenderer(material, memerial);
+        //testRender = GetComponent<Renderer>();
+        //testRender.CreateMesh();
         // renderer.TestingInit();
     }
     private void Update()
     {
+
         renderer.UpdateBuffer();
         //renderer.RenderScreen();
+        //testRender.DrawScreen();
         tileController.CheckActiveTiles();
         if (Input.GetMouseButton(0))
         {
